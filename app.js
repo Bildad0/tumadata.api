@@ -10,13 +10,22 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 const app = express();
-const port = 3002;
+const port = 3004;
 
 app.use(bodyParser.json());
 app.use(express.json());
-app.use(cors());
 
-app.get('/', userController.verifyToken, userController.getUserByUserName);
+var corsOptions = {
+  origin: "http://localhost:8081"
+};
+app.use(cors());
+app.use(express.json());
+
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true }));
+app.get('/',(req, res)=>{
+  res.json({ message: 'Welcome to tuma data API, we are under maintenance' });
+});
 
 // Authentication routes
 app.post('/api/register', userController.registerUser);

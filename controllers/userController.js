@@ -1,5 +1,5 @@
 // userController.js
-const db = require('../db');
+const db = require('../db.config');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -8,21 +8,16 @@ const SECRET_KEY = "achieng"; // Ideally, store this in an environment variable
 // User registration
 exports.registerUser = async (req, res) => {
   const { username, password, email, phone } = req.body;
-
   console.log(`user details: ${username} ${password} ${email} ${phone}`);
   if (!username || !password || !email || !phone) {
     return res.status(400).json({ error: 'All fields are required' });
   }
-
-  try {
     // Check if the email is already in use
-    const checkEmailQuery = `SELECT * FROM "user" WHERE email = ${email}`;
-    const checkEmailResult = await db.query(checkEmailQuery, [email]);
+    const checkEmailQuery = `SELECT * FROM "user" WHERE email='${email}'`;
+    const checkEmailResult = await db.query(checkEmailQuery);
 
     if (checkEmailResult.rows.length > 0) {
       return res.status(400).json({ error: 'Email already in use' });
-    } else if(error){
-      return res.status(400).json(error.message);
     }
 
     // Hash the password using bcrypt
@@ -31,7 +26,7 @@ exports.registerUser = async (req, res) => {
     // Insert the new user into the "user" table
     const insertQuery = `
           INSERT INTO "user" (username, password, email, phone_number)
-          VALUES (${username},${hashedPassword}, ${email}, ${phone})
+          VALUES ('${username}','${hashedPassword}', '${email}', '${phone}')
           RETURNING id, username, email, phone_number
         `;
 
@@ -45,16 +40,14 @@ exports.registerUser = async (req, res) => {
       email: newUser.email,
       phone: newUser.phone_number,
     });
-  } catch (error) {
-    return res.status(500).json({ error: 'Internal server error' });
-  }
+
 };
 
 // User login
 exports.loginUser = async (req, res) => {
   const { username, password } = req.body;
-  try {
-    const result = await db.query('SELECT * FROM users WHERE username = $1', [username]);
+
+    const result = await db.query(`SELECT * FROM "user" WHERE username ='${username}'`);
     if (result.rows.length === 0) {
       return res.status(400).json({ error: 'User not found' });
     }
@@ -67,9 +60,6 @@ exports.loginUser = async (req, res) => {
     }
 
     res.json({ message: 'Login successful' });
-  } catch (error) {
-    res.status(500).json({ error: 'Error logging in' });
-  }
 };
 
 // Middleware to verify JWT token

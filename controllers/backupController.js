@@ -1,5 +1,5 @@
 // backupController.js
-const db = require('../db');
+const db = require('../db.config');
 const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
