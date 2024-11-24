@@ -3,14 +3,13 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon app.js",
+    "dev": "nodemon server.js",
     "build": "webpack",
     "start": "node dist/bundle.js"
   },
   "keywords": [
     "node js",
     "jwt",
-    "authentication",
     "express",
     "postgresql"
   ],
