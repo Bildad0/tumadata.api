@@ -2,7 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const backupController = require('./controllers/backupController');
+const backupController = require('./controllers/backup.controller');
 const userController = require('./controllers/user.controller');
 const cron = require('node-cron'); // Import node-cron for scheduling tasks
 const dotenv = require("dotenv");
@@ -26,10 +26,13 @@ var corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-db.sequelize.sync({force: true}).then(() => {
-  console.log('Drop and Resync Db');
-  initial();
+
+db.sequelize.authenticate().then(() => {
+  db.sequelize.sync({ force: true }).then(() => {
+    initial();
+  });
 });
+
 
 
 function initial() {
@@ -37,34 +40,27 @@ function initial() {
     id: 1,
     name: "user"
   });
- 
+
   Role.create({
     id: 2,
     name: "moderator"
   });
- 
+
   Role.create({
     id: 3,
     name: "admin"
   });
 }
 
-
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
-app.get('/',(req, res)=>{
+app.get('/', (req, res) => {
   res.json({ message: 'Welcome to tuma data API, we are under maintenance' });
 });
 
 require('./routes/auth.routes')(app);
 require('./routes/user.routes')(app);
-
-// Schedule automatic backups every day at midnight
-cron.schedule('0 0 * * *', () => {
-  console.log('Running scheduled backup');
-  backupController.createBackupCron(); // Call the backup function directly without authentication
-});
-
+require('./routes/backup.routes')(app);
 // Start the server
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);

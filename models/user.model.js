@@ -1,3 +1,5 @@
+const Backup = require('./backup.model')
+
 module.exports = (sequelize, Sequelize) => {
   const User = sequelize.define("user", {
     username: {
@@ -7,12 +9,19 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING
     },
     email: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: true,
+      },
     },
     phone: {
       type: Sequelize.STRING
     },
   });
+  
 
   return User;
 }; 
+ 

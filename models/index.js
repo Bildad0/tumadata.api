@@ -24,6 +24,7 @@ db.sequelize = sequelize;
 
 db.user = require("../models/user.model.js")(sequelize, Sequelize);
 db.role = require("../models/role.model.js")(sequelize, Sequelize);
+db.backup = require("../models/backup.model.js")(sequelize, Sequelize);
 
 db.role.belongsToMany(db.user, {
   through: "user_roles"
@@ -31,6 +32,9 @@ db.role.belongsToMany(db.user, {
 db.user.belongsToMany(db.role, {
   through: "user_roles"
 });
+
+db.user.hasMany(db.backup, { foreignKey: 'userId', as: 'backups' });
+db.backup.belongsTo(db.user, { foreignKey: 'userId', as: 'user' });
 
 db.ROLES = ["user", "admin", "moderator"];
 
