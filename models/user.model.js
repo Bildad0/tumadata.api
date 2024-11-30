@@ -1,5 +1,3 @@
-const Backup = require('./backup.model')
-
 module.exports = (sequelize, Sequelize) => {
   const User = sequelize.define("user", {
     username: {

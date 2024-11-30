@@ -2,9 +2,6 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const backupController = require('./controllers/backup.controller');
-const userController = require('./controllers/user.controller');
-const cron = require('node-cron'); // Import node-cron for scheduling tasks
 const dotenv = require("dotenv");
 const db = require("./models");
 

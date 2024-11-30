@@ -1,4 +1,5 @@
 // backupController.js
+const { authenticateToken } = require("../Middlewares/token_verification");
 const db = require("../models");
 const multer = require('multer');
 const Backup = db.backup;
@@ -16,7 +17,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 
-exports.Upload = upload.single('file'), async (req, res) => {
+exports.Upload = upload.single('file'), authenticateToken, async (req, res) => {
   const { autoBackup, userId } = req.body;
 
   if (!req.file) {
@@ -47,11 +48,9 @@ exports.Upload = upload.single('file'), async (req, res) => {
 };
 
 
-exports.Uploads = async (req, res) => {
+exports.Uploads = authenticateToken, async (req, res) => {
   const { userId } = req.params;
-
   try {
-    
     const user = await User.findByPk(userId, { include: 'backups' });
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
