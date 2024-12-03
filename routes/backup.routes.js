@@ -9,6 +9,6 @@ module.exports = function(app){
     });
 
     app.post("/api/backup/",controller.Upload);
-    app.get('/user/:userId/backups',controller.Uploads);
+    app.get('/api/:userId/backups',controller.Uploads);
 
 }
