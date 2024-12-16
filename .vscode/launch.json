@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "type": "msedge",
+            "name": "http://api/auth/signup",
+            "request": "launch",
+            "url": "http://api/auth/signup"
+        }
+    ]
+}

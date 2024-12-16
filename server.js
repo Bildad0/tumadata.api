@@ -7,7 +7,7 @@ const db = require("./models");
 
 dotenv.config();
 const app = express();
-const port = 3004;
+const port = 3001;
 const Role = db.role;
 
 var corsOptions = {
